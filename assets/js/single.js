@@ -6,8 +6,9 @@ var displayWarning = function(repo) {
   // add text to warning container
   limitWarningEl.textContent = "To see more than 30 issues, visit ";
 
+  // create link element
   var linkEl = document.createElement("a");
-  linkEl.textContent = "See More Issues on GitHub.com";
+  linkEl.textContent = "GitHub.com";
   linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
   linkEl.setAttribute("target", "_blank");
 
@@ -25,7 +26,6 @@ var getRepoIssues = function(repo){
 
         // check if api has paginated issues
         if(response.headers.get("Link")) {
-          debugger
           displayWarning(repo);
         }
       });
