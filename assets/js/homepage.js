@@ -2,9 +2,30 @@ var userFormEl = document.querySelector("#user-form");
 var nameInputEl = document.querySelector("#username");
 var repoContainerEl = document.querySelector("#repos-container");
 var repoSearchTerm = document.querySelector("#repo-search-term")
+var languageButtonsEl = document.querySelector("#language-buttons")
 
 
+var getFeaturedRepos = function(language){
+  var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
 
+  fetch(apiUrl).then (response => {
+    //  check if api returned any repos
+    if(response.ok){
+      response.json()
+        // .then (data => console.log(data));
+        .then (data => displayRepos(data.items, language));        
+
+    } else {
+      alert("Error: Github Repos Not Found");
+    }
+  })
+
+  // catch network errors
+  .catch(error => {
+    // this catch is chained to the end of the '.then()
+    alert("unable to connect to GitHub");
+  });
+};
 
 var getUserRepos = function(user){
   // format the github url
@@ -87,9 +108,23 @@ var formSubmitHandler = function(event){
   } else {
     alert("Please enter a GitHub username")
   }
-}
+};
+
+var buttonClickHandler = function(event){
+  var language = event.target.getAttribute("data-language");
+
+  // console.log(language)
+
+  if (language){
+    getFeaturedRepos(language);
+
+    // clear old content
+    repoContainerEl.textContent = "";
+  }
+};
 
 
 
 // event listner
 userFormEl.addEventListener("submit",formSubmitHandler);
+languageButtonsEl.addEventListener("click", buttonClickHandler);
